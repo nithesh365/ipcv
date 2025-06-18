@@ -1,0 +1,37 @@
+# 1
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Load the image
+img = cv2.imread(r'output-donut.jpeg')
+if img is None:
+    raise FileNotFoundError("Image not found at the specified path.")
+
+# Convert from BGR to RGB for correct color in matplotlib
+img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+# Get dimensions
+h, w, _ = img_rgb.shape
+h2, w2 = h // 2, w // 2
+
+# Divide into quadrants
+top_left = img_rgb[:h2, :w2]
+top_right = img_rgb[:h2, w2:]
+bottom_left = img_rgb[h2:, :w2]
+bottom_right = img_rgb[h2:, w2:]
+
+# Use same plotting structure
+titles = ['Top Left', 'Top Right', 'Bottom Left', 'Bottom Right']
+images = [top_left, top_right, bottom_left, bottom_right]
+
+plt.figure(figsize=(12, 8))
+for i in range(4):
+    plt.subplot(2, 2, i + 1)
+    plt.imshow(images[i])
+    plt.title(f"{titles[i]} - {images[i].shape}")
+    plt.axis('off')
+
+plt.tight_layout()
+plt.show()
