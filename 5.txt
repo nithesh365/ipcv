@@ -1,0 +1,38 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import cv2
+
+# 📥 Load the image in grayscale
+image = cv2.imread(r'C:\Users\SHREEKSHITHA\Pictures\logo.jpg', cv2.IMREAD_GRAYSCALE)
+if image is None:
+    raise FileNotFoundError("The image file was not found.")
+
+# 🧪 Convert to binary using thresholding
+_, binary_image = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
+
+# 🔧 Define a 3x3 structuring element
+kernel = np.ones((3, 3), np.uint8)
+
+# ➖ Perform erosion (shrinks white regions)
+eroded_image = cv2.erode(binary_image, kernel)
+
+# ➕ Perform dilation (expands white regions)
+dilated_image = cv2.dilate(binary_image, kernel)
+
+# 🔍 Subtract results from original to observe edges
+eroded_diff = cv2.absdiff(binary_image, eroded_image)    # Highlights outer boundaries
+dilated_diff = cv2.absdiff(dilated_image, binary_image)  # Highlights inner boundaries
+
+# 📊 Display results
+titles = ['Original Binary', 'Eroded', 'Dilated', 'Erosion Diff', 'Dilation Diff']
+images = [binary_image, eroded_image, dilated_image, eroded_diff, dilated_diff]
+
+plt.figure(figsize=(15, 6))
+for i, img in enumerate(images):
+    plt.subplot(2, 3, i + 1)
+    plt.imshow(img, cmap='gray')
+    plt.title(titles[i])
+    plt.axis('off')
+
+plt.tight_layout()
+plt.show()
