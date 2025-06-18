@@ -1,0 +1,37 @@
+# 7. Implement morphological operations such as dilation, erosion, opening, and closing on
+# binary images.
+
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 🖼️ Load the image (convert to grayscale)
+image = cv2.imread(r'C:\Users\SHREEKSHITHA\Pictures\nature.jpg', cv2.IMREAD_GRAYSCALE)
+if image is None:
+    raise FileNotFoundError("The image file was not found.")
+
+# 🔳 Convert to binary image using threshold
+_, binary_image = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY)
+
+# 🧱 Define a 3x3 structuring element (kernel)
+kernel = np.ones((3, 3), np.uint8)
+
+# 🛠️ Apply morphological operations
+eroded = cv2.erode(binary_image, kernel, iterations=1)
+dilated = cv2.dilate(binary_image, kernel, iterations=1)
+opening = cv2.morphologyEx(binary_image, cv2.MORPH_OPEN, kernel)
+closing = cv2.morphologyEx(binary_image, cv2.MORPH_CLOSE, kernel)
+
+# 📊 Display all results using matplotlib
+titles = ['Original Binary', 'Erosion', 'Dilation', 'Opening', 'Closing']
+images = [binary_image, eroded, dilated, opening, closing]
+
+plt.figure(figsize=(15, 8))
+for i in range(5):
+    plt.subplot(2, 3, i + 1)
+    plt.imshow(images[i], cmap='gray')
+    plt.title(titles[i])
+    plt.axis('off')
+
+plt.tight_layout()
+plt.show()
